@@ -1,7 +1,8 @@
 import { GetServerSideProps } from "next";
 import { gql } from "@apollo/client";
 import getClient from "@/lib/apolloClient";
-import Link from "next/link";
+import styled from "styled-components";
+import LocationInfo from "@/components/LocationInfo";
 
 type Location = {
   id: string;
@@ -25,19 +26,7 @@ const GET_LOCATION = gql`
 `;
 
 const LocationPage: React.FC<{ location: Location }> = ({ location }) => {
-  return (
-    <>
-      <h1>{location.name}</h1>
-      <p>Dimension: {location.dimension}</p>
-      {location.residents.map((resident: any) => (
-        <Link key={resident.id} href={`/character/${resident.id}`}>
-          {resident.name}
-          <br />
-        </Link>
-      ))}
-      ,
-    </>
-  );
+  return <LocationInfo location={location} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

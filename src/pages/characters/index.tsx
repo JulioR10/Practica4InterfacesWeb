@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import CharacterList from "@/components/CharacterList";
 import { useEffect, useState } from "react";
 import SearchInput from "@/components/SearchInput";
+import styled from "styled-components";
 
 const GET_CHARACTERS = gql`
   query GetCharacters($page: Int!, $filter: FilterCharacter) {
@@ -44,8 +45,7 @@ const Index: React.FC = () => {
   return (
     <>
       <SearchInput value={search} onChange={setSearch} />
-      <CharacterList characters={characters} />
-      <div>
+      <ButtonsContainer>
         <button
           disabled={previousPageDisabled}
           onClick={() => setPage(page - 1)}
@@ -55,9 +55,17 @@ const Index: React.FC = () => {
         <button disabled={nextPageDisabled} onClick={() => setPage(page + 1)}>
           Siguiente página
         </button>
-      </div>
+      </ButtonsContainer>
+      <CharacterList characters={characters} />
     </>
   );
 };
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
 
 export default Index;

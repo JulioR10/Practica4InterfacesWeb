@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { gql } from "@apollo/client";
 import getClient from "@/lib/apolloClient";
 import Link from "next/link";
+import styled from "styled-components";
 
 type Character = {
   id: string;
@@ -14,7 +15,7 @@ type Character = {
 
 const CharacterPage: React.FC<{ character: Character }> = ({ character }) => {
   return (
-    <div>
+    <CharacterContainer>
       <img src={character.image} alt={character.name} />
       <h1>{character.name}</h1>
       <a>Location: </a>
@@ -31,7 +32,7 @@ const CharacterPage: React.FC<{ character: Character }> = ({ character }) => {
           <br />
         </Link>
       ))}
-    </div>
+    </CharacterContainer>
   );
 };
 
@@ -91,5 +92,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     revalidate: 60,
   };
 };
+
+const CharacterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+`;
 
 export default CharacterPage;

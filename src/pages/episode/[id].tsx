@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import Link from "next/link";
+import EpisodeInfo from "@/components/EpisodeInfo";
 
 type Episode = {
   id: string;
@@ -42,19 +41,7 @@ const EpisodePage: React.FC = () => {
     return <div>Loading...</div>;
   }
 
-  return (
-    <>
-      <h1>{episode.name}</h1>
-      <p>Fecha de emisión: {episode.air_date}</p>
-      <ul>
-        {episode.characters.map((character) => (
-          <li key={character.id}>
-            <Link href={`/character/${character.id}`}>{character.name}</Link>
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+  return <EpisodeInfo episode={episode} />;
 };
 
 export default EpisodePage;
