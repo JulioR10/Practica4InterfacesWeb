@@ -1,11 +1,9 @@
 import { ChangeEvent } from "react";
 
-interface SearchInputProps {
+const SearchInput: React.FC<{
   value: string;
   onChange: (value: string) => void;
-}
-
-const SearchInput: React.FC<SearchInputProps> = ({ value, onChange }) => {
+}> = ({ value, onChange }) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   };
