@@ -1,0 +1,193 @@
+// pages/index.tsx
+import { GetServerSideProps } from "next";
+import { gql, useQuery } from "@apollo/client";
+import CharacterList from "../components/CharacterList";
+import getClient from "@/lib/apolloClient";
+import { useEffect, useState } from "react";
+import SearchInput from "../components/SearchInput";
+
+// types/Character.ts
+export interface Character {
+  id: string;
+  name: string;
+  status: string;
+  species: string;
+  type: string;
+  gender: string;
+  image: string;
+}
+
+// interface IndexProps {
+//   characters: Character[];
+// }
+
+// const Index: React.FC<IndexProps> = ({ characters }) => {
+//   return <CharacterList characters={characters} />;
+// };
+
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const client = getClient();
+
+//   const { data } = await client.query({
+//     query: gql`
+//       query GetCharacters {
+//         characters {
+//           results {
+//             id
+//             name
+//           }
+//         }
+//       }
+//     `,
+//   });
+
+//   return {
+//     props: {
+//       characters: data.characters.results,
+//     },
+//   };
+// };
+
+// export default Index;
+
+// pages/index.tsx
+
+const GET_CHARACTERS = gql`
+  query GetCharacters($page: Int!, $filter: FilterCharacter) {
+    characters(page: $page, filter: $filter) {
+      info {
+        prev
+        next
+      }
+      results {
+        id
+        name
+        image
+      }
+    }
+  }
+`;
+
+interface IndexProps {
+  initialCharacters: Character[];
+  initialInfo: {
+    prev: number | null;
+    next: number | null;
+  };
+}
+
+// const Index: React.FC<IndexProps> = ({ initialCharacters, initialInfo }) => {
+//   const [page, setPage] = useState(1);
+//   const { data, refetch } = useQuery(GET_CHARACTERS, {
+//     variables: { page },
+//     skip: page === 1,
+//   });
+
+//   useEffect(() => {
+//     if (page !== 1) {
+//       refetch();
+//     }
+//   }, [page, refetch]);
+
+//   const characters = page === 1 ? initialCharacters : data?.characters.results;
+//   const info = page === 1 ? initialInfo : data?.characters.info;
+
+//   const previousPageDisabled = page === 1 || !info?.prev;
+//   const nextPageDisabled = !info?.next;
+
+//   return (
+//     <>
+//       <CharacterList characters={characters} />
+//       <div className="mt-4">
+//         <button
+//           className="mr-4"
+//           disabled={previousPageDisabled}
+//           onClick={() => setPage(page - 1)}
+//         >
+//           Página anterior
+//         </button>
+//         <button disabled={nextPageDisabled} onClick={() => setPage(page + 1)}>
+//           Siguiente página
+//         </button>
+//       </div>
+//     </>
+//   );
+// };
+
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const client = getClient();
+
+//   const { data } = await client.query({
+//     query: GET_CHARACTERS,
+//     variables: { page: 1 },
+//   });
+
+//   return {
+//     props: {
+//       initialCharacters: data.characters.results,
+//       initialInfo: data.characters.info,
+//     },
+//   };
+// };
+
+// export default Index;
+
+const Index: React.FC<IndexProps> = ({ initialCharacters, initialInfo }) => {
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const { data, refetch } = useQuery(GET_CHARACTERS, {
+    variables: { page, filter: { name: search } },
+    skip: page === 1 && search === "",
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [page, search, refetch]);
+
+  const characters =
+    page === 1 && search === ""
+      ? initialCharacters
+      : data?.characters?.results || [];
+  const info =
+    page === 1 && search === "" ? initialInfo : data?.characters?.info;
+
+  const previousPageDisabled = page === 1 || !info?.prev;
+  const nextPageDisabled = !info?.next;
+
+  return (
+    <>
+      <SearchInput value={search} onChange={setSearch} />
+      <CharacterList characters={characters} />
+      <div className="mt-4">
+        <button
+          className="mr-4"
+          disabled={previousPageDisabled}
+          onClick={() => setPage(page - 1)}
+        >
+          Página anterior
+        </button>
+        <button disabled={nextPageDisabled} onClick={() => setPage(page + 1)}>
+          Siguiente página
+        </button>
+      </div>
+    </>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const client = getClient();
+
+  const { data } = await client.query({
+    query: GET_CHARACTERS,
+    variables: { page: 1 },
+  });
+
+  return {
+    props: {
+      initialCharacters: data.characters.results,
+      initialInfo: data.characters.info,
+    },
+  };
+};
+
+export default Index;

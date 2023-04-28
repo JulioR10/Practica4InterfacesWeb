@@ -1,0 +1,38 @@
+/* .container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+  
+.character {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.character img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-width: 150px;
+    max-height: 150px;
+}  
+
+const CharacterList: React.FC<{ characters: Character[] }> = ({
+  characters,
+}) => {
+  return (
+    <div className={styles.container}>
+      {characters.map((character) => (
+        <Link key={character.id} href={`/character/${character.id}`}>
+          <div className={styles.character}>
+            <img src={character.image} alt={character.name} />
+            <h3>{character.name}</h3>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+};*/
