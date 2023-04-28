@@ -6,7 +6,6 @@ import Link from "next/link";
 type Location = {
   id: string;
   name: string;
-  type: string;
   dimension: string;
   residents: any;
 };
@@ -16,7 +15,6 @@ const GET_LOCATION = gql`
     location(id: $id) {
       id
       name
-      type
       dimension
       residents {
         id
@@ -30,7 +28,6 @@ const LocationPage: React.FC<{ location: Location }> = ({ location }) => {
   return (
     <>
       <h1>{location.name}</h1>
-      <p>Type: {location.type}</p>
       <p>Dimension: {location.dimension}</p>
       {location.residents.map((resident: any) => (
         <Link key={resident.id} href={`/character/${resident.id}`}>

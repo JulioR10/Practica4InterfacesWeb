@@ -6,9 +6,6 @@ import Link from "next/link";
 type Character = {
   id: string;
   name: string;
-  status: string;
-  species: string;
-  type: string;
   gender: string;
   image: string;
   episode: any;
@@ -18,18 +15,14 @@ type Character = {
 const CharacterPage: React.FC<{ character: Character }> = ({ character }) => {
   return (
     <div>
-      <h1>{character.name}</h1>
       <img src={character.image} alt={character.name} />
-      <p>Status: {character.status}</p>
-      <p>Species: {character.species}</p>
-      <p>Type: {character.type}</p>
-      <p>Gender: {character.gender}</p>
+      <h1>{character.name}</h1>
       <a>Location: </a>
       <Link href={`/location/${character.location.id}`}>
         {character.location.name}
         <br />
       </Link>
-      <br />
+      <p>Gender: {character.gender}</p>
       Episodes:
       <br />
       {character.episode.map((episode: any) => (
@@ -73,9 +66,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         character(id: $id) {
           id
           name
-          status
-          species
-          type
           gender
           image
           location {
